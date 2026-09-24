@@ -10,13 +10,24 @@ public class MachineRepository {
 
     public List<Machine> findAll() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            return session
-                    .createQuery(
+            return session.createQuery(
+                    "select m from Machine m " +
+                            "join fetch m.client " +
+                            "join fetch m.type",
+                    Machine.class
+            ).getResultList();
+        }
+    }
+
+    public List<Machine> findByClientId(Integer clientId) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.createQuery(
                             "select m from Machine m " +
                                     "join fetch m.client " +
-                                    "join fetch m.type",
+                                    "join fetch m.type " +
+                                    "where m.client.id = :clientId",
                             Machine.class
-                    )
+                    ).setParameter("clientId", clientId)
                     .getResultList();
         }
     }

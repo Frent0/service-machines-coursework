@@ -116,7 +116,7 @@ public class MainView {
                     accessService.isAdmin(user);
 
             view.setCenter(
-                    new MachineView(canEdit).getView()
+                    new MachineView(user, canEdit).getView()
             );
         });
 
@@ -127,12 +127,9 @@ public class MainView {
         );
 
         repairsButton.setOnAction(e -> {
-
-            boolean canEdit =
-                    accessService.isAdmin(user);
-
+            boolean canEdit = accessService.isAdmin(user);
             view.setCenter(
-                    new RepairView(canEdit).getView()
+                    new RepairView(user, canEdit).getView()
             );
         });
 

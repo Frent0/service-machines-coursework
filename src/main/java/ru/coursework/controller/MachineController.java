@@ -28,4 +28,8 @@ public class MachineController {
     public void updateMachine(Machine machine) {
         repository.update(machine);
     }
+
+    public List<Machine> getMachinesByClient(Integer clientId) {
+        return repository.findByClientId(clientId);
+    }
 }

@@ -28,4 +28,8 @@ public class RepairController {
     public void updateRepair(Repair repair) {
         repository.update(repair);
     }
+
+    public List<Repair> getRepairsByClient(Integer clientId) {
+        return repository.findByClientId(clientId);
+    }
 }

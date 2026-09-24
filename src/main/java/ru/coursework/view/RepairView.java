@@ -13,6 +13,7 @@ import ru.coursework.database.HibernateUtil;
 import ru.coursework.model.Machine;
 import ru.coursework.model.Repair;
 import ru.coursework.model.RepairType;
+import ru.coursework.model.User;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -22,12 +23,18 @@ public class RepairView {
     private final RepairController controller;
     private final TableView<Repair> table;
     private final boolean editable;
+    private final User user;
 
     public RepairView() {
-        this(true);
+        this(null, true);
     }
 
     public RepairView(boolean editable) {
+        this(null, editable);
+    }
+
+    public RepairView(User user, boolean editable) {
+        this.user = user;
         this.editable = editable;
 
         controller = new RepairController();
@@ -100,9 +107,25 @@ public class RepairView {
     }
 
     private void loadRepairs() {
+
+        List<Repair> repairs;
+
+        if (user != null
+                && user.getClient() != null
+                && !editable) {
+
+            repairs = controller.getRepairsByClient(
+                    user.getClient().getId()
+            );
+
+        } else {
+
+            repairs = controller.getRepairs();
+        }
+
         table.setItems(
                 FXCollections.observableArrayList(
-                        controller.getRepairs()
+                        repairs
                 )
         );
     }

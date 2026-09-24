@@ -21,6 +21,21 @@ public class RepairRepository {
         }
     }
 
+    public List<Repair> findByClientId(Integer clientId) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session
+                    .createQuery(
+                            "select r from Repair r " +
+                                    "join fetch r.machine m " +
+                                    "join fetch r.repairType " +
+                                    "where m.client.id = :clientId",
+                            Repair.class
+                    )
+                    .setParameter("clientId", clientId)
+                    .getResultList();
+        }
+    }
+
     public void save(Repair repair) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             session.beginTransaction();

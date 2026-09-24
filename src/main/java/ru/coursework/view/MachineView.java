@@ -14,6 +14,7 @@ import ru.coursework.database.HibernateUtil;
 import ru.coursework.model.Client;
 import ru.coursework.model.Machine;
 import ru.coursework.model.MachineType;
+import ru.coursework.model.User;
 
 import java.util.List;
 
@@ -22,12 +23,18 @@ public class MachineView {
     private final MachineController controller;
     private final TableView<Machine> table;
     private final boolean editable;
+    private final User user;
 
     public MachineView() {
-        this(true);
+        this(null, true);
     }
 
     public MachineView(boolean editable) {
+        this(null, editable);
+    }
+
+    public MachineView(User user, boolean editable) {
+        this.user = user;
         this.editable = editable;
 
         controller = new MachineController();
@@ -70,9 +77,25 @@ public class MachineView {
     }
 
     private void loadMachines() {
+
+        List<Machine> machines;
+
+        if (user != null
+                && user.getClient() != null
+                && !editable) {
+
+            machines = controller.getMachinesByClient(
+                    user.getClient().getId()
+            );
+
+        } else {
+
+            machines = controller.getMachines();
+        }
+
         table.setItems(
                 FXCollections.observableArrayList(
-                        controller.getMachines()
+                        machines
                 )
         );
     }
